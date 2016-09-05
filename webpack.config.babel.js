@@ -125,7 +125,10 @@ switch (TARGET) {
     config = merge(
       common,
       {
-        devtool: 'eval-source-map'
+        devtool: 'eval-source-map',
+        // output: {
+        //   publicPath: 'static/',
+        // }
       },
       parts.setFreeVariable(
         'process.env.NODE_ENV',
@@ -134,12 +137,12 @@ switch (TARGET) {
       parts.minify(),
       parts.setupCSS(PATHS.excludeStyle),
       parts.loadCSSAssets(),
+      parts.htmlTemplate({devServer: process.env.PORT}),
       parts.devServer({
         host: process.env.HOST,
-        port: process.env.PORT,
-        poll: ENABLE_POLLING
+        port: process.env.PORT
       }),
-      // parts.devDashboard()
+      parts.devDashboard()
     )
 }
 

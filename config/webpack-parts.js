@@ -3,7 +3,7 @@ const CleanWebpackPlugin = require('clean-webpack-plugin')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const PurifyCSSPlugin = require('purifycss-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
-// const DashboardPlugin = require('webpack-dashboard/plugin')
+const DashboardPlugin = require('webpack-dashboard/plugin')
 
 exports.devServer = options => ({
   devServer: {
@@ -13,7 +13,9 @@ exports.devServer = options => ({
     stats: 'errors-only',
     host: options.host,
     port: options.port,
-    quiet: true
+    quiet: true,
+    open: true,
+    contentBase: 'http://localhost:8080/static'
   },
   plugins: [
     new webpack.HotModuleReplacementPlugin({
@@ -22,11 +24,11 @@ exports.devServer = options => ({
   ]
 })
 
-// exports.devDashboard = (port = 3000) => ({
-//   plugins: [
-//     new DashboardPlugin(port)
-//   ]
-// })
+exports.devDashboard = (port = 3000) => ({
+  plugins: [
+    new DashboardPlugin(port)
+  ]
+})
 
 exports.minify = () => ({
   plugins: [
@@ -119,7 +121,6 @@ exports.htmlTemplate = opts => ({
 
         // Optional
         appMountId: 'app',
-        devServer: process.env.PORT,
         googleAnalytics: {
           trackingId: 'UA-37360536-3',
           pageViewOnLoad: true

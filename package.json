@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "ava",
-    "build": "webpack"
+    "build": "webpack",
+    "start": "webpack-dashboard -- webpack-dev-server"
   },
   "repository": {
     "type": "git",
@@ -41,6 +42,7 @@
     "style-loader": "^0.13.1",
     "url-loader": "^0.5.7",
     "webpack": "^1.13.2",
+    "webpack-dashboard": "^0.1.8",
     "webpack-dev-server": "^1.15.1",
     "webpack-merge": "^0.14.1",
     "webpack-validator": "^2.2.7"

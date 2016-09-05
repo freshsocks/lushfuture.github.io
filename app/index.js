@@ -106,16 +106,21 @@ class MarkdownView extends Component {
   render() {
     const mdContent = htmlStringToDOM(this.props.md.markedContent)
 
+    console.log(this.props.md.markedContent, 'htmlStringToDOM', mdContent)
 
-
-    console.log('htmlStringToDOM', mdContent)
-
-
+    // <section dangerouslySetInnerHTML={{__html: this.props.md.markedContent}} />
     return (
-      <section>
-      {this.props.md.markedContent}
-      {blazeDOM(mdContent)}
-      </section>
+      <div>
+        {
+          mdContent.map(mdElement => {
+            const lineHtml = mdElement.outerHTML
+            return createElement('div', {
+              mdLine: true,
+              dangerouslySetInnerHTML: {__html: lineHtml}
+            }, null)
+          })
+        }
+      </div>
     )
   }
 }

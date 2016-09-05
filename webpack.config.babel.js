@@ -6,7 +6,7 @@ const validate = require('webpack-validator')
 const parts = require('./config/webpack-parts')
 const pkg = require('./package.json')
 
-const EXCLUDE_DEPS = ['font-awesome']
+const EXCLUDE_DEPS = ['font-awesome', 'normalize']
 
 const baseHref = {baseHref: `file://${path.join(__dirname, 'dist')}`}
 
@@ -22,7 +22,7 @@ const PATHS = {
     path.join(__dirname, 'app', 'main.css')
   ],
   excludeStyle: [
-    path.join(__dirname, 'node_modules', 'font-awesome')
+    path.join(__dirname, 'node_modules', 'font-awesome'),
   ],
   build: path.join(__dirname, 'dist'),
   test: path.join(__dirname, 'test'),

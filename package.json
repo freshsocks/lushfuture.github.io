@@ -57,7 +57,8 @@
     "inferno-router": "^0.7.26",
     "marked": "^0.3.6",
     "mobx": "^2.5.1",
-    "mobx-inferno": "^0.2.0"
+    "mobx-inferno": "^0.2.0",
+    "normalize-css": "^2.3.1"
   },
   "ava": {
     "files": [

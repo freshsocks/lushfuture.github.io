@@ -6,7 +6,10 @@ import Component from 'inferno-component'
 import createElement from 'inferno-create-element'
 import { observer } from 'mobx-inferno'
 
+require('normalize-css')
 require('font-awesome-webpack')
+
+const css = require('./main.css')
 
 const root = document.getElementById('app')
 
@@ -21,19 +24,9 @@ class MarkdownDocument {
 
   constructor() {
     this.renderer = new Renderer()
-
-    this.renderer.heading = (text, level) => {
-      const escapedText = text.toLowerCase().replace(/[^\w]+/g, '-')
-      const element = createElement(`h${level}`, {id: escapedText},
-        createElement('a', {href: `#${escapedText}`}, text)
-      )
-
-      console.log(element)
-
-      return element
-    }
   }
 
+  @observable tokens = []
 
   @observable title = null
 
@@ -202,23 +195,15 @@ which you wish to be displayed literally, ex.: \`foo\`, \*bar\*, etc.
     return marked.parse(this.content, {renderer: this.renderer})
   }
 
-  @action update = data => {
+  @action update = content => {
     // ...
-    this.content = data
+    this.content = content
     // ...
-  }
-
-  lexed = () => {
-    const tokens = marked.lexer(this.content, {renderer: this.renderer})
-    console.log({tokens})
-    console.log({parser: marked.parser(tokens)})
   }
 
 }
 
 const mdDoc = new MarkdownDocument()
-
-mdDoc.lexed()
 
 
 
@@ -228,45 +213,6 @@ mdDoc.lexed()
  *  @observer
  *
  */
-
-// const reactifyHTML = nodeList => {
-//   const list = [].concat(nodeList)
-//
-//   if (list.length >>> 0) {
-//     return list.map(child => {
-//       console.log('reactifyHTML child =>', child)
-//       child.
-//       return reactifyHTML(child)
-//     })
-//   }
-//
-// let children
-//
-// if (child.children.length === 0) {
-//   children = child.innerHTML
-// }
-//
-// if () {
-//   children =
-// }
-//
-//
-//   return createElement(tag, null, children)
-//
-//
-//   const hasChildren = nodes.length >>> 0
-//   const children = hasChildren ?
-//     nodes.map(child => {
-//       console.log('reactifyHTML child =>', child)
-//       return reactifyHTML(child)
-//     }) :
-//     doc.innerHTML
-//   const tag = /^\#.+/.test(doc.nodeName) ?
-//     'div' :
-//     doc.nodeName
-//
-// }
-
 
 const htmlStringToDOM = htmlString => {
   const parser = new DOMParser()
@@ -291,18 +237,24 @@ class MarkdownView extends Component {
     // <section dangerouslySetInnerHTML={{__html: this.props.md.markedContent}} />
     return (
       <div>
-        <div>
-          {this.props.md.markedContent}
-        </div>
-        <div>
+        <div className={css.markdownView}>
         {
           htmlStringToDOM(this.props.md.markedContent).map((mdElement, i) => {
             const lineHtml = mdElement.outerHTML
             return createElement('div', {
-              mdLine: true,
-              dangerouslySetInnerHTML: {__html: lineHtml},
-              contenteditable: 'true'
-            }, null)
+              key: `line-${i}`,
+              id: `line-${i}`,
+              className: css.line
+            }, [
+                createElement('span', {className: css.lineLabel}, i),
+                createElement('div', {
+                  className: css.lineBody,
+                  mdLine: true,
+                  dangerouslySetInnerHTML: {__html: lineHtml},
+                  contenteditable: 'true'
+                }, null)
+            ]
+          )
           })
         }
         </div>
@@ -311,7 +263,7 @@ class MarkdownView extends Component {
           onKeyUp={e => {
             // e.preventDefault()
             console.log({target: e.target.value})
-            this.props.md.content = e.target.value.trim()
+            this.props.md.content = e.target.value
           }}
           value={this.props.md.content}/>
       </div>

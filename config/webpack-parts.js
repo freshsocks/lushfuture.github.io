@@ -120,6 +120,7 @@ exports.htmlTemplate = opts => ({
         //template: 'node_modules/html-webpack-template/index.ejs',
 
         // Optional
+        title: 'Lushfuture',
         appMountId: 'app',
         googleAnalytics: {
           trackingId: 'UA-37360536-3',

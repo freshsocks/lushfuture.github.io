@@ -3,29 +3,12 @@ import { observable, action, computed, autorun } from 'mobx'
 import Inferno from 'inferno'
 import InfernoDOM from 'inferno-dom'
 import Component from 'inferno-component'
+import createElement from 'inferno-create-element'
 import { observer } from 'mobx-inferno'
 
-const root = document.createElement('div')
-document.body.appendChild(root)
+require('font-awesome-webpack')
 
-
-/**
- *
- *  MarkdownView Component
- *  @observer
- *
- */
-
-@observer
-class MarkdownView extends Component {
-  render() {
-    return (
-      { /* < ... /> */ }
-    )
-  }
-}
-
-
+const root = document.getElementById('app')
 
 /**
  *
@@ -34,7 +17,7 @@ class MarkdownView extends Component {
  *
  */
 
-class Document {
+class MarkdownDocument {
 
   constructor() {
     this.renderer = new Renderer()
@@ -43,9 +26,9 @@ class Document {
 
   @observable title = null
 
-  @observable content = ''
+  @observable content = "# A Boy and A Fish\n\n[This is a link](http://lushfuture.com) in markdown"
 
-  @computed markedContent() {
+  @computed get markedContent() {
     return marked(this.content, {renderer: this.renderer})
   }
 
@@ -57,6 +40,86 @@ class Document {
 
 }
 
+const mdDoc = new MarkdownDocument()
+
+
+
+/**
+ *
+ *  MarkdownView Component
+ *  @observer
+ *
+ */
+
+// const reactifyHTML = nodeList => {
+//   const list = [].concat(nodeList)
+//
+//   if (list.length >>> 0) {
+//     return list.map(child => {
+//       console.log('reactifyHTML child =>', child)
+//       child.
+//       return reactifyHTML(child)
+//     })
+//   }
+//
+// let children
+//
+// if (child.children.length === 0) {
+//   children = child.innerHTML
+// }
+//
+// if () {
+//   children =
+// }
+//
+//
+//   return createElement(tag, null, children)
+//
+//
+//   const hasChildren = nodes.length >>> 0
+//   const children = hasChildren ?
+//     nodes.map(child => {
+//       console.log('reactifyHTML child =>', child)
+//       return reactifyHTML(child)
+//     }) :
+//     doc.innerHTML
+//   const tag = /^\#.+/.test(doc.nodeName) ?
+//     'div' :
+//     doc.nodeName
+//
+// }
+
+
+const blazeDOM = nodeArray => createElement('div', null, nodeArray)
+
+const htmlStringToDOM = htmlString => {
+  const parser = new DOMParser()
+  const doc = parser.parseFromString(htmlString, "text/html")
+  const body = doc.body
+  const children = Array.from(body.children)
+  return children
+}
+
+
+@observer
+class MarkdownView extends Component {
+  render() {
+    const mdContent = htmlStringToDOM(this.props.md.markedContent)
+
+
+
+    console.log('htmlStringToDOM', mdContent)
+
+
+    return (
+      <section>
+      {this.props.md.markedContent}
+      {blazeDOM(mdContent)}
+      </section>
+    )
+  }
+}
+
 
 /**
  *
@@ -65,7 +128,7 @@ class Document {
  */
 
 InfernoDOM.render(
-  <h1>Hello, my name is Steve.</h1>,
+  <MarkdownView md={mdDoc} />,
   root
 )
 
@@ -84,7 +147,7 @@ table(string header, string body)
 tablerow(string content)
 tablecell(string content, object flags)
 
-*/
+
 
 mdRenderer.code = (code, language) => {
   //
@@ -120,7 +183,7 @@ mdRenderer.tablecell = (content, flags) => {
   //
 }
 
-/*
+
 
 Inline level renderer methods
 strong(string text)

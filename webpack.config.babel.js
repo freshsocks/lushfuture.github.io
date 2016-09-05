@@ -3,12 +3,16 @@ const FaviconsWebpackPlugin = require('favicons-webpack-plugin')
 const merge = require('webpack-merge')
 const validate = require('webpack-validator')
 
-const parts = require('config/webpack-parts')
-const package = require('./package.json')
+const parts = require('./config/webpack-parts')
+const pkg = require('./package.json')
 
 const EXCLUDE_DEPS = ['font-awesome']
 
-const DEPS = Object.keys(PKG.dependencies).filter(dep => EXCLUDE_DEPS.indexOf(dep) < 0)
+const baseHref = {baseHref: `file://${path.join(__dirname, 'dist')}`}
+
+console.log(baseHref)
+
+const DEPS = Object.keys(pkg.dependencies).filter(dep => EXCLUDE_DEPS.indexOf(dep) < 0)
 
 const TARGET = process.env.npm_lifecycle_event
 
@@ -41,7 +45,7 @@ const common = {
   },
   output: {
     path: PATHS.build,
-    filename: '[name]'
+    filename: '[name].js'
   },
   module: {
     loaders: [
@@ -65,9 +69,6 @@ const common = {
   },
   plugins: [
     new FaviconsWebpackPlugin(PATHS.favicon),
-    new HtmlWebpackPlugin({
-      title: "merkpad"
-    }),
   ]
 }
 
@@ -86,10 +87,11 @@ switch (TARGET) {
         devtool: 'source-map',
         output: {
           path: PATHS.build,
-          filename: '[name].[chunkhash]',
+          filename: '[name].[chunkhash].js',
           chunkFilename: '[chunkhash]'
         }
       },
+      parts.htmlTemplate(),
       parts.clean(PATHS.build),
       parts.setFreeVariable(
         'process.env.NODE_ENV',
@@ -97,7 +99,7 @@ switch (TARGET) {
       ),
       parts.extractBundle({
         name: 'vendor',
-        entries: ['inferno', 'inferno-dom']
+        entries: DEPS
       }),
       parts.minify(),
       parts.extractCSS(PATHS.style),
@@ -118,7 +120,6 @@ switch (TARGET) {
         devtool: 'inline-source-map'
       },
       parts.loadIsparta(PATHS.app),
-      parts.loadJSX(PATHS.test)
     )
   default:
     config = merge(
@@ -131,14 +132,14 @@ switch (TARGET) {
         'development'
       ),
       parts.minify(),
-      parts.setupCSS(PATHS.style, PATHS.excludeStyle),
+      parts.setupCSS(PATHS.excludeStyle),
       parts.loadCSSAssets(),
       parts.devServer({
         host: process.env.HOST,
         port: process.env.PORT,
         poll: ENABLE_POLLING
       }),
-      parts.devDashboard()
+      // parts.devDashboard()
     )
 }
 

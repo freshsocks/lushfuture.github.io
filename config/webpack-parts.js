@@ -2,6 +2,7 @@ const webpack = require('webpack')
 const CleanWebpackPlugin = require('clean-webpack-plugin')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const PurifyCSSPlugin = require('purifycss-webpack-plugin')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
 // const DashboardPlugin = require('webpack-dashboard/plugin')
 
 exports.devServer = options => ({
@@ -32,7 +33,7 @@ exports.minify = () => ({
     new webpack.optimize.UglifyJsPlugin({
       compress: {
         warnings: false,
-        drop_console: true
+        drop_console: false
       }
     })
   ]
@@ -107,7 +108,34 @@ exports.logStats = (isDebug = true, isVerbose = false) => ({
   }
 })
 
+exports.htmlTemplate = opts => ({
+  plugins: [
+    new HtmlWebpackPlugin(Object.assign(
+      {
+        // Required
+        inject: false,
+        template: require('html-webpack-template'),
+        //template: 'node_modules/html-webpack-template/index.ejs',
 
+        // Optional
+        appMountId: 'app',
+        devServer: process.env.PORT,
+        googleAnalytics: {
+          trackingId: 'UA-37360536-3',
+          pageViewOnLoad: true
+        },
+        meta: {
+          description: "view and edit markdown notes"
+        },
+        mobile: true
+
+        // and any other config options from html-webpack-plugin
+        // https://github.com/ampedandwired/html-webpack-plugin#configuration
+      },
+      opts
+    ))
+  ]
+})
 
 /*  =============== *
  *     CSS Parts    *

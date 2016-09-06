@@ -28,7 +28,17 @@ class MarkdownDocument {
 
   @observable tokens = []
 
-  @observable title = null
+  @observable filename = null
+  @observable createdOn = new Date('August 20, 2016')
+
+  @computed get dateParts () {
+    const splitDate = this.createdOn.toGMTString().split(' ')
+    const day = splitDate[1]
+    const month = splitDate[2]
+    const year = splitDate[3]
+
+    return { day, month, year}
+  }
 
   // @observable content = "# A Boy and A Fish\n\n[This is a link](http://lushfuture.com) in markdown"
   @observable content = `
@@ -180,7 +190,7 @@ Here's a "line block":
 
 and images can be specified like so:
 
-![example image](example-image.jpg "An exemplary image")
+![example image](http://images.akamai.steamusercontent.com/ugc/452985461540266384/E881CC4C258196F4390630E2CD19B1B8CA68F60D/ "An exemplary image")
 
 Inline math equations go in like so: $\omega = d\phi / dt$. Display
 math should get its own line and be put in in double-dollarsigns:
@@ -228,6 +238,7 @@ class MarkdownView extends Component {
   render() {
     const mdContent = htmlStringToDOM(this.props.md.markedContent)
 
+
     const lines = this.props.md.content.split('\n\n')
 
     console.log(lines)
@@ -236,7 +247,14 @@ class MarkdownView extends Component {
 
     // <section dangerouslySetInnerHTML={{__html: this.props.md.markedContent}} />
     return (
-      <div>
+      <div className={css.appContainer}>
+        <div className={css.columnA}>
+          <div className={css.documentDate}>
+            <p className={css.month}>{`${this.props.md.dateParts.month}`.toUpperCase()}</p>
+            <p className={css.day}>{this.props.md.dateParts.day}</p>
+            <p className={css.year}>{this.props.md.dateParts.year}</p>
+          </div>
+        </div>
         <div className={css.markdownView}>
         {
           htmlStringToDOM(this.props.md.markedContent).map((mdElement, i) => {
@@ -250,8 +268,7 @@ class MarkdownView extends Component {
                 createElement('div', {
                   className: css.lineBody,
                   mdLine: true,
-                  dangerouslySetInnerHTML: {__html: lineHtml},
-                  contenteditable: 'true'
+                  dangerouslySetInnerHTML: {__html: lineHtml}
                 }, null)
             ]
           )
@@ -259,7 +276,7 @@ class MarkdownView extends Component {
         }
         </div>
         <textarea
-        style={{width: '500px'}}
+          className={css.mdEditor}
           onKeyUp={e => {
             // e.preventDefault()
             console.log({target: e.target.value})

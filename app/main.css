@@ -1,11 +1,28 @@
+* {
+  box-sizing: border-box;
+}
+
 body {
   font-family: monospace;
+}
+.appContainer {
+  display: flex;
+}
+
+.appHeader {
+  flex: 1 1 100%;
+}
+
+.columnA {
+  flex: 0 0 auto;
+  background: rgba(228,228,228,0.1);
 }
 
 .markdownView {
   max-width: 60vw;
-  padding-right: 2em;
+  padding-right: 2.6em;
   border-right: 1px solid rgba(60,60,60,0.04);
+  flex: 4 1 auto;
 }
 
 .line {
@@ -18,9 +35,9 @@ body {
 
 .lineLabel {
   width: 2em;
-  color: rgba(98,98,98,0.2);
-  border-right: 1px solid rgba(60,60,60,0.04);
-  background: rgba(180,180,180,0.08);
+  color: rgba(180,180,180,0.1);
+  border-right: 1px solid rgba(200,200,200,0.1);
+  background: rgba(220,220,220,0.1);
   font-size: 1.2em;
   display: flex;
   justify-content: center;
@@ -30,7 +47,44 @@ body {
 }
 
 .lineBody {
-  padding-left: 2em;
+  padding-left: 1.6em;
   color: rgba(20,20,20,0.8);
   display: inline-block;
+}
+
+.documentDate {
+  background: #48443f;
+  color: rgb(237,237,237);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  padding: 1em 2.6em;
+  margin: 1.6em;
+}
+
+.documentDate .month {
+  font-size: 1.2em;
+  letter-spacing: 0.16em;
+  margin: 0;
+}
+
+.documentDate .day {
+  font-size: 2.7em;
+  margin: 0;
+}
+
+.documentDate .year {
+  font-size: 1em;
+  letter-spacing: 0.1em;
+  margin: 0;
+}
+
+.mdEditor {
+  padding: 2em 0.45em 0;
+  border-left: 10px solid rgba(35, 35, 35, 0.7);
+  outline: 0 none;
+  background: rgba(35, 35, 35, 0.65);
+  color: rgb(230,230,230);
+  flex: 4 1 45vw;
 }
